@@ -1,6 +1,7 @@
 import bcryptjs from 'bcryptjs';
 import User from '../models/userModel.js';
 import jwt from  'jsonwebtoken'
+import createError from '../utils/createError.js';
 
 export const register = async (req, res, next) => {
     if (!req.body.name || !req.body.email || !req.body.password) {
@@ -73,4 +74,22 @@ export const login = async (req, res, next) => {
     } catch (err) {
       return next(err);
     }
+  };
+
+  export const logout = async (req, res) => {
+    res.clearCookie('access_token');
+    return res.status(200).json({ message: 'logout success' });
+  };
+
+  export const isLoggedIn = async (req, res) => {
+    const token = req.cookies.access_token;
+    if (!token) {
+      return res.json(false);
+    }
+    return jwt.verify(token, process.env.JWT_SECRET, (err) => {
+      if (err) {
+        return res.json(false);
+      }
+      return res.json(true);
+    });
   };

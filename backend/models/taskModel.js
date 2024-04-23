@@ -1,4 +1,3 @@
-import mongoose from "mongoose";
 import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
@@ -10,7 +9,7 @@ const taskSchema = new Schema({
   },
   description: {
     type: String,
-    required: false,l
+    required: false,
   },
   dueDate: {
     type: Date,

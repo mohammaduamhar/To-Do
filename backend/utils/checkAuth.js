@@ -6,7 +6,7 @@ export default (req, res, next) => {
   if (!token) {
     return next(createError({ status: 401, message: 'Unauthorized' }));
   }
-  return jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+  return jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) => {
     if (err) {
       return next(createError({ status: 401, message: 'Unauthorized, invalid token' }));
     }
