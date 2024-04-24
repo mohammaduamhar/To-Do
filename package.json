@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node backend/index.js",
-    "heroku-postbuild": "cd client && npm install vite && npm install --only=dev && npm install && npm run build",
+    "heroku-postbuild": "cd client && npm install @vitejs/plugin-react-swc && npm install --only=dev && npm install && npm run build",
     "server": "nodemon backend/index.js",
     "client": "npm run dev --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\""
