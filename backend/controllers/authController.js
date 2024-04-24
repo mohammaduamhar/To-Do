@@ -4,31 +4,41 @@ import jwt from  'jsonwebtoken'
 import createError from '../utils/createError.js';
 
 export const register = async (req, res, next) => {
-    if (!req.body.name || !req.body.email || !req.body.password) {
+  if (!req.body.name || !req.body.email || !req.body.password) {
+    return next(
+      createError({
+        message: 'Name, Email & password are required',
+        statusCode: 400,
+      }),
+    );
+  }
+
+  try {
+    const salt = await bcryptjs.genSalt(10);
+    const hashedPassword = await bcryptjs.hash(req.body.password, salt);
+
+    const newUser = new User({
+      name: req.body.name,
+      email: req.body.email,
+      password: hashedPassword,
+    });
+
+    await newUser.save();
+    return res.status(201).json('New User Created');
+  } catch (err) {
+    if (err.code === 11000 && err.keyPattern && err.keyPattern.email) {
       return next(
         createError({
-          message: 'Name, Email & password are required',
+          message: 'Email already exists',
           statusCode: 400,
         }),
       );
-    }
-  
-    try {
-      const salt = await bcryptjs.genSalt(10);
-      const hashedPassword = await bcryptjs.hash(req.body.password, salt);
-  
-      const newUser = new User({
-        name: req.body.name,
-        email: req.body.email,
-        password: hashedPassword,
-      });
-  
-      await newUser.save();
-      return res.status(201).json('New User Created');
-    } catch (err) {
+    } else {
       return next(err);
     }
-  };
+  }
+};
+
 
 export const login = async (req, res, next) => {
     if (!req.body.email || !req.body.password) {
@@ -39,6 +49,8 @@ export const login = async (req, res, next) => {
         }),
       );
     }
+
+
   
     try {
       const user = await User.findOne({ email: req.body.email }).select(
@@ -65,12 +77,17 @@ export const login = async (req, res, next) => {
       const token = jwt.sign(payload, process.env.JWT_SECRET_KEY, {
         expiresIn: '1d',
       });
-      return res
+      res
         .cookie('access_token', token, {
           httpOnly: true,
         })
+
+        console.log('Response Headers:', res.getHeaders());
+
+      return res
         .status(200)
         .json({ name: user.name, email: user.email, message: 'login success' });
+        
     } catch (err) {
       return next(err);
     }
@@ -86,7 +103,7 @@ export const login = async (req, res, next) => {
     if (!token) {
       return res.json(false);
     }
-    return jwt.verify(token, process.env.JWT_SECRET, (err) => {
+    return jwt.verify(token, process.env.JWT_SECRET_KEY, (err) => {
       if (err) {
         return res.json(false);
       }
