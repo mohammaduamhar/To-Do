@@ -8,7 +8,7 @@
    - In the client directory: `npm install`
 4. Run the application: `npm run dev` (in the root directory)
 
-## Bonus Tasks (Optional):
+## Bonus Tasks Completed:
 1. Implement dark and light theme options.
 2. Add a filter option based on task completion status.
 3. Enable viewing task details.
