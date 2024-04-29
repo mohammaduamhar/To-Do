@@ -8,16 +8,7 @@
    - In the client directory: `npm install`
 4. Run the application: `npm run dev` (in the root directory)
 
-## Bonus Tasks Completed:
-1. Implement dark and light theme options.
-2. Add a filter option based on task completion status.
-3. Enable viewing task details.
-4. Add multiple user access:
-   - Implement user registration and login functionality.
-   - Store user data securely in a database.
-5. Implement JWT Authentication:
-   - Use JSON Web Tokens (JWT) for user authentication.
-   - Secure routes that require authentication using JWT.
+
 
 ![To-Do List Preview](https://github.com/mohammaduamhar/To-Do/assets/111201065/c60621be-a951-493e-903a-fa567f072c5e)
 
